@@ -1,12 +1,5 @@
 # Masterpiece
 
-# Links
-
-- [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
-- [deploy](https://id.heroku.com/login)
-
-- [presentation](www.nothing.com)
-- [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
 
 ---
 
@@ -159,3 +152,10 @@ npm run dev
 Base URL: This application can be run locally on the http:/localhost:4000
 
 ---
+# Links
+
+- [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
+- [deploy](https://id.heroku.com/login)
+
+- [presentation](www.nothing.com)
+- [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
