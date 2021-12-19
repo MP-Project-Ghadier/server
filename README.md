@@ -91,7 +91,7 @@
 
 # ERD
 
-## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD.png?raw=true)
+## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD_server.drawio.png?raw=true)
 
 ---
 
