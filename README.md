@@ -1,5 +1,13 @@
 # Masterpiece
 
+# Liks
+
+- [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
+- [deploy](https://id.heroku.com/login)
+
+- [presentation](www.nothing.com)
+- [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
+
 ---
 
 ## Used Libraries
@@ -11,6 +19,71 @@
 - mongoose
 - bcrypt
 - jsonwebtoken
+
+---
+
+# UML Diagram:
+
+## ![umld](https://github.com/MP-Project-Ghadier/server/blob/main/UML.png?raw=true)
+
+---
+
+# Entity Relationship Diagram
+
+## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD_server.drawio.png?raw=true)
+
+---
+
+### Installing Dependencies
+
+#### Node.js
+
+You csn install it here: [Node js docs](https://nodejs.org/en/).
+
+#### NPM Dependencies
+
+You can install dependencies by running in you terminal:
+
+```
+npm i
+```
+
+---
+
+#### Key Dependencies
+
+- [Express](https://expressjs.com/) is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+
+- [mongoose](https://mongoosejs.com/) is an elegant mongodb object modeling for node.js.
+
+- [morgan](https://www.npmjs.com/package/morgan) is a HTTP request logger middleware for node.js.
+
+- [bcrypt](https://www.npmjs.com/package/bcrypt) is a A library to help you hash passwords.
+
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) is a JSON Web Token implementation (symmetric and asymmetric).
+
+---
+
+#### ▸ Setting up the variables
+
+You have to set up some variables in the `.env` file, for the app to run properly.
+
+```
+PORT=4000
+DB_URL="MongoDB DB URL..."
+SALT="SALT..."
+SECRET_KEY="SecretKey..."
+```
+
+---
+
+## Running the server
+
+To run the server, in you terminal:
+
+```
+npm run dev
+```
 
 ---
 
@@ -83,24 +156,10 @@
 
 ---
 
-# UML Diagram:
+## API Reference
 
-## ![umld](https://github.com/MP-Project-Ghadier/server/blob/main/UML.png?raw=true)
+## Getting Started
 
----
-
-# ERD
-
-## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD_server.drawio.png?raw=true)
-
----
-
-# Liks
-
-- [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
-- [deploy](https://id.heroku.com/login)
-
-- [presentation](www.nothing.com)
-- [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
+Base URL: This application can be run locally on the http:/localhost:4000
 
 ---
