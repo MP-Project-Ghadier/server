@@ -5,13 +5,14 @@
 
 ## Used Libraries
 
-- express
-- cors
-- morgan
-- dotenv
-- mongoose
-- bcrypt
-- jsonwebtoken
+- [Express](https://expressjs.com/)
+- [mongoose](https://mongoosejs.com/)
+- [morgan](https://www.npmjs.com/package/morgan)
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+- [cors](https://www.npmjs.com/package/cors)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+
 
 ---
 
@@ -40,16 +41,6 @@ You can install dependencies by running in you terminal:
 ```
 npm i
 ```
-
----
-
-#### Key Dependencies
-
-- [Express](https://expressjs.com/)
-- [mongoose](https://mongoosejs.com/)
-- [morgan](https://www.npmjs.com/package/morgan)
-- [bcrypt](https://www.npmjs.com/package/bcrypt)
-- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
 ---
 
