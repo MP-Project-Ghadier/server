@@ -1,6 +1,5 @@
 # Masterpiece
 
-
 ---
 
 ## Used Libraries
@@ -12,7 +11,6 @@
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [cors](https://www.npmjs.com/package/cors)
 - [dotenv](https://www.npmjs.com/package/dotenv)
-
 
 ---
 
@@ -44,7 +42,7 @@ npm i
 
 ---
 
-####  Setting up the variables
+#### Setting up the variables
 
 You have to set up some variables in the `.env` file, for the app to run properly.
 
@@ -143,6 +141,25 @@ npm run dev
 Base URL: This application can be run locally on the http:/localhost:4000
 
 ---
+
+## Endpoints
+
+| HTTP Method |      Endpoint      |                               Request Body | Success status | Error Status |                                                                                                        Description |
+| :---------- | :----------------: | -----------------------------------------: | -------------: | -----------: | -----------------------------------------------------------------------------------------------------------------: |
+| post        |     /register      | {userName, email, password, avatar, role } |            201 |          400 |                                                     create user with encrypted password, and store user in session |
+| post        |       /login       |                         {email, password } |            200 |          400 | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
+| get         |       /users       |                                    {empty} |            200 |          400 |                                                                              Make admin check all users in the app |
+| put         |     /user/:id      |        {userName, email, password, avatar} |            200 |          400 |                                                                                       Make user update his profile |
+| post        |      /newPost      |                        { title, desc, img} |            201 |          400 |                                                                                             Make user add new post |
+| put         |  /updatePost/:id   |                                   { desc } |            200 |          400 |                                                                                  Make user update post description |
+| put         |  /deletePost/:id   |                                  { empty } |            200 |          400 |                                                                                          Make user delete any post |
+| post        |  /newComment/:id   |                                   { desc } |            201 |          400 |                                                                                        Make user publish a comment |
+| get         |     /comments      |                                  { empty } |            200 |          400 |                                                                                         Make user see all comments |
+| put         | /updateComment/:id |                                   { desc } |            200 |          400 |                                                                                         Make user update a comment |
+| put         | /deleteComment/:id |                                  { empty } |            200 |          400 |                                                                                         Make user delete a comment |
+
+---
+
 # Links
 
 - [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
