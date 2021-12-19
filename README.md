@@ -148,14 +148,14 @@ Base URL: This application can be run locally on the http:/localhost:4000
 | :---------- | :----------------: | -----------------------------------------: | -------------: | -----------: | -----------------------------------------------------------------------------------------------------------------: |
 | post        |     /register      | {userName, email, password, avatar, role } |            201 |          400 |                                                     create user with encrypted password, and store user in session |
 | post        |       /login       |                         {email, password } |            200 |          400 | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
-| get         |       /users       |                                    {empty} |            200 |          400 |                                                                              Make admin check all users in the app |
-| put         |     /user/:id      |        {userName, email, password, avatar} |            200 |          400 |                                                                                       Make user update his profile |
-| post        |      /newPost      |                        { title, desc, img} |            201 |          400 |                                                                                             Make user add new post |
-| put         |  /updatePost/:id   |                                   { desc } |            200 |          400 |                                                                                  Make user update post description |
-| put         |  /deletePost/:id   |                                  { empty } |            200 |          400 |                                                                                          Make user delete any post |
-| post        |  /newComment/:id   |                                   { desc } |            201 |          400 |                                                                                        Make user publish a comment |
-| get         |     /comments      |                                  { empty } |            200 |          400 |                                                                                         Make user see all comments |
-| put         | /deleteComment/:id |                                  { empty } |            200 |          400 |                                                                                         Make user delete a comment |
+| get         |       /users       |                                    {empty} |            200 |          400 |                                                                                         Make admin check all users |
+| put         |     /user/:id      |        {userName, email, password, avatar} |            200 |          400 |                                                                                             Update profile By user |
+| post        |      /newPost      |                        { title, desc, img} |            201 |          400 |                                                                                               Add new post By user |
+| put         |  /updatePost/:id   |                                   { desc } |            200 |          400 |                                                                                    Update post description By user |
+| put         |  /deletePost/:id   |                                  { empty } |            200 |          400 |                                                                                        Delete post By created user |
+| post        |  /newComment/:id   |                                   { desc } |            201 |          400 |                                                                                          Publish a comment By user |
+| get         |     /comments      |                                  { empty } |            200 |          400 |                                                                                          Show all comments By user |
+| put         | /deleteComment/:id |                                  { empty } |            200 |          400 |                                                                                           Delete a comment By user |
 
 ---
 
