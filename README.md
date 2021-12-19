@@ -144,18 +144,50 @@ Base URL: This application can be run locally on the http:/localhost:4000
 
 ## Endpoints
 
-| HTTP Method |      Endpoint      |                               Request Body | Success status | Error Status |                                                                                                        Description |
-| :---------- | :----------------: | -----------------------------------------: | -------------: | -----------: | -----------------------------------------------------------------------------------------------------------------: |
-| post        |     /register      | {userName, email, password, avatar, role } |            201 |          400 |                                                     create user with encrypted password, and store user in session |
-| post        |       /login       |                         {email, password } |            200 |          400 | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
-| get         |       /users       |                                    {empty} |            200 |          400 |                                                                                         Make admin check all users |
-| put         |     /user/:id      |        {userName, email, password, avatar} |            200 |          400 |                                                                                             Update profile By user |
-| post        |      /newPost      |                        { title, desc, img} |            201 |          400 |                                                                                               Add new post By user |
-| put         |  /updatePost/:id   |                                   { desc } |            200 |          400 |                                                                                    Update post description By user |
-| put         |  /deletePost/:id   |                                  { empty } |            200 |          400 |                                                                                        Delete post By created user |
-| post        |  /newComment/:id   |                                   { desc } |            201 |          400 |                                                                                          Publish a comment By user |
-| get         |     /comments      |                                  { empty } |            200 |          400 |                                                                                          Show all comments By user |
-| put         | /deleteComment/:id |                                  { empty } |            200 |          400 |                                                                                           Delete a comment By user |
+### User
+
+| HTTP Method |      Endpoint      |                    Request Body | Success status | Error Status |                                                                                                        Description |
+| :---------- | :----------------: | ------------------------------: | -------------: | -----------: | -----------------------------------------------------------------------------------------------------------------: |
+| post        |     /register      | { email, name, password, city } |            201 |          400 |                                                     create user with encrypted password, and store user in session |
+| post        |       /login       |              {email, password } |            200 |          400 | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
+| put         |     /user/:id      |   {email, name, password, city} |            200 |          400 |                                                                                           Update profile By a user |
+| put         | /deleteAccount/:id |               {email, password} |            200 |          400 |                                                                                           Delete account By a user |
+| get         |     /research      |                         {empty} |            200 |          400 |                                                                                       Check all research By a user |
+| get         |   /research/:id    |                         {empty} |            200 |          400 |                                                                                          Read a research By a user |
+| get         |      /events       |                         {empty} |            200 |          400 |                                                                                         Check all events By a user |
+| get         |     /event/:id     |                         {empty} |            200 |          400 |                                                                                            Read an event By a user |
+| get         |       /posts       |                         {empty} |            200 |          400 |                                                                                          Check all posts By a user |
+| post        |      /newPost      |                  { title, desc} |            201 |          400 |                                                                                             Add new post By a user |
+| get         |     /post/:id      |                         {empty} |            200 |          400 |                                                                                              Read a post By a user |
+| get         |   /userPosts/:id   |                         {empty} |            200 |          400 |                                                                                          Read all posts By user id |
+| put         |  /updatePost/:id   |                        { desc } |            200 |          400 |                                                                                  Update post description By a user |
+| put         |  /deletePost/:id   |                       { empty } |            200 |          400 |                                                                                      Delete post By created a user |
+| post        |  /newComment/:id   |                        { desc } |            201 |          400 |                                                                                        Publish a comment By a user |
+| put         | /deleteComment/:id |                       { empty } |            200 |          400 |                                                                                         Delete a comment By a user |
+| get         |      /center       |                         {empty} |            200 |          400 |                                                                                        Check all centers By a user |
+| get         |    /center/:id     |                         {empty} |            200 |          400 |                                                                                           Check a center By a user |
+
+---
+
+### Specialist
+
+| HTTP Method |    Endpoint     | Request Body | Success status | Error Status |                       Description |
+| :---------- | :-------------: | -----------: | -------------: | -----------: | --------------------------------: |
+| post        | /createResearch |      {empty} |            201 |          400 | Create a new research By an admin |
+---
+
+### Admin
+
+| HTTP Method |      Endpoint      | Request Body | Success status | Error Status |                             Description |
+| :---------- | :----------------: | -----------: | -------------: | -----------: | --------------------------------------: |
+| get         |    /allComments    |    { empty } |            200 |          400 |           Show all comments By an admin |
+| get         |     /allUsers      |      {empty} |            200 |          400 |             Check all users By an admin |
+| post        |    /adminEvent     |      {empty} |            201 |          400 |          Create a new event By an admin |
+| post        |   /adminResearch   |      {empty} |            201 |          400 |       Create a new research By an admin |
+| put         | /appSpecialist/:id |      {empty} |            200 |          400 | Approve any specialist user By an admin |
+| put         |  /appResearch/:id  |      {empty} |            200 |          400 |   Approve any research user By an admin |
+| put         | /adminDelUser/:id  |      {empty} |            200 |          400 |             Delete any user By an admin |
+| put         | /adminDelPost/:id  |      {empty} |            200 |          400 |             Delete any post By an admin |
 
 ---
 
@@ -163,6 +195,5 @@ Base URL: This application can be run locally on the http:/localhost:4000
 
 - [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
 - [deploy](https://id.heroku.com/login)
-
 - [presentation](www.nothing.com)
 - [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
