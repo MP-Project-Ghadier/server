@@ -14,18 +14,6 @@
 
 ---
 
-# UML Diagram:
-
-## ![umld](https://github.com/MP-Project-Ghadier/server/blob/main/UML.png?raw=true)
-
----
-
-# Entity Relationship Diagram
-
-## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD_server.drawio.png?raw=true)
-
----
-
 ### Installing Dependencies
 
 #### Node.js
@@ -75,13 +63,16 @@ npm run dev
 | Permissions | Array | Required, Unique |           N/A |
 
 ---
+
 ### States Model
 
 | Key         | Type  |          Options | Default Value |
 | :---------- | :---: | ---------------: | ------------: |
 | Role        | Sting | Required, Unique |           N/A |
 | Permissions | Array | Required, Unique |           N/A |
+
 ---
+
 ### Users Model
 
 | Key       |  Type  |          Options | Default Value |
@@ -140,6 +131,12 @@ npm run dev
 
 ---
 
+# Entity Relationship Diagram
+
+## ![erd](https://github.com/MP-Project-Ghadier/server/blob/main/ERD_server.drawio.png?raw=true)
+
+---
+
 ## API Reference
 
 ## Getting Started
@@ -180,6 +177,7 @@ Base URL: This application can be run locally on the http:/localhost:4000
 | HTTP Method |    Endpoint     | Request Body | Success status | Error Status |                       Description |
 | :---------- | :-------------: | -----------: | -------------: | -----------: | --------------------------------: |
 | post        | /createResearch |      {empty} |            201 |          400 | Create a new research By an admin |
+
 ---
 
 ### Admin
@@ -194,6 +192,12 @@ Base URL: This application can be run locally on the http:/localhost:4000
 | put         |  /appResearch/:id  |      {empty} |            200 |          400 |   Approve any research user By an admin |
 | put         | /adminDelUser/:id  |      {empty} |            200 |          400 |             Delete any user By an admin |
 | put         | /adminDelPost/:id  |      {empty} |            200 |          400 |             Delete any post By an admin |
+
+---
+
+# UML Diagram:
+
+## ![umld](https://github.com/MP-Project-Ghadier/server/blob/main/UML.png?raw=true)
 
 ---
 
