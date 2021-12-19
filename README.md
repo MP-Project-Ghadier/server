@@ -155,7 +155,6 @@ Base URL: This application can be run locally on the http:/localhost:4000
 | put         |  /deletePost/:id   |                                  { empty } |            200 |          400 |                                                                                          Make user delete any post |
 | post        |  /newComment/:id   |                                   { desc } |            201 |          400 |                                                                                        Make user publish a comment |
 | get         |     /comments      |                                  { empty } |            200 |          400 |                                                                                         Make user see all comments |
-| put         | /updateComment/:id |                                   { desc } |            200 |          400 |                                                                                         Make user update a comment |
 | put         | /deleteComment/:id |                                  { empty } |            200 |          400 |                                                                                         Make user delete a comment |
 
 ---
