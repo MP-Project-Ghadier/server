@@ -13,9 +13,9 @@
 ---
 # Liks
 
-[deploy](https://id.heroku.com/login)
-[trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
-[presentation](www.nothing.com)
-[clinet_Repo](https://github.com/MP-Project-Ghadier/client)
+* [deploy](https://id.heroku.com/login)
+* [trello](https://trello.com/b/tkoa9kQQ/mp-project-ghadier)
+* [presentation](www.nothing.com)
+* [clinet_Repo](https://github.com/MP-Project-Ghadier/client)
 
 ---
