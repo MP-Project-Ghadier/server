@@ -75,7 +75,13 @@ npm run dev
 | Permissions | Array | Required, Unique |           N/A |
 
 ---
+### States Model
 
+| Key         | Type  |          Options | Default Value |
+| :---------- | :---: | ---------------: | ------------: |
+| Role        | Sting | Required, Unique |           N/A |
+| Permissions | Array | Required, Unique |           N/A |
+---
 ### Users Model
 
 | Key       |  Type  |          Options | Default Value |
