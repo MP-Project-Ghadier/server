@@ -66,10 +66,9 @@ npm run dev
 
 ### States Model
 
-| Key         | Type  |          Options | Default Value |
-| :---------- | :---: | ---------------: | ------------: |
-| Role        | Sting | Required, Unique |           N/A |
-| Permissions | Array | Required, Unique |           N/A |
+| Key         | Type  |  Options | Default Value |
+| :---------- | :---: | -------: | ------------: |
+| State       | Sting | Required |           N/A |
 
 ---
 
