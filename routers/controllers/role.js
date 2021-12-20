@@ -23,12 +23,16 @@ const newRole = (req, res) => {
 
 const roles = (req, res) => {
   try {
-    roleModel.find({}).then((result) => {
-      res.status(200).send(result);
+    roleModel.find().then((result) => {
+      res
+        .status(200)
+        .json({ message: "roles has been shown successfully", result });
     });
   } catch {
     (err) => {
-      res.status(400).send(err);
+      res
+        .status(400)
+        .json({ message: "role has not been shown, try again", err });
     };
   }
 };
