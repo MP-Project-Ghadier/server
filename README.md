@@ -64,11 +64,11 @@ npm run dev
 
 ---
 
-### States Model
+### Status Model
 
 | Key         | Type  |  Options | Default Value |
 | :---------- | :---: | -------: | ------------: |
-| State       | Sting | Required |           N/A |
+| Status       | Sting | Required |           N/A |
 
 ---
 
@@ -82,7 +82,7 @@ npm run dev
 | Timestamp |  Date  |              N/A |    Date.now() |
 | City      | String |              N/A |    Date.now() |
 | Role      |  Ref   |         Required |           N/A |
-| state     |  Ref   |         Required |           N/A |
+| Status     |  Ref   |         Required |           N/A |
 | Room      |  Ref   |              N/A |           N/A |
 
 ---
