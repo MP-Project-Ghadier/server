@@ -3,12 +3,15 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 require("dotenv").config();
-require("./db");
+require("./db/index.js");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+
+const roleRouter = require("./routers/routes/role");
+app.use(roleRouter);
 
 const PORT = process.env.PORT || 4000;
 

@@ -99,7 +99,7 @@ npm run dev
 
 ---
 
-### Comments Role
+### Comments Model
 
 | Key       | Type  |  Options | Default Value |
 | :-------- | :---: | -------: | ------------: |
@@ -120,7 +120,7 @@ npm run dev
 
 ---
 
-### Messages Role
+### Messages Model
 
 | Key       | Type  |  Options | Default Value |
 | :-------- | :---: | -------: | ------------: |
