@@ -6,6 +6,9 @@ const users = new mongoose.Schema({
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   isDel: { type: Boolean, default: false },
+  key: { type: Number },
+  confirmed: { type: Boolean, default: false },
+  resetCode: { type: Number },
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Roles",
