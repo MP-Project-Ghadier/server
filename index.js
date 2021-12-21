@@ -13,6 +13,12 @@ app.use(morgan("dev"));
 const roleRouter = require("./routers/routes/role");
 app.use(roleRouter);
 
+const userRouter = require("./routers/routes/user");
+app.use(userRouter);
+
+const statusRouter = require("./routers/routes/status");
+app.use(statusRouter);
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
