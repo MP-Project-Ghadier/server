@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 
-const user = new mongoose.Schema({
+const users = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   isDel: { type: Boolean, default: false },
+  key: { type: Number },
+  confirmed: { type: Boolean, default: false },
+  resetCode: { type: Number },
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Roles",
