@@ -15,7 +15,7 @@ const {
   verifyAccount,
   forgetPass,
   resetPass,
-  googlelogin,
+  // googlelogin,
 } = require("../controllers/user");
 
 const authentication = require("./../middleware/authentication");
@@ -32,7 +32,7 @@ userRouter.post("/forgetPass", forgetPass);
 userRouter.post("/resetPass/:id", resetPass);
 
 // log in with google
-userRouter.post("/googlelogin", googlelogin);
+// userRouter.post("/googlelogin", googlelogin);
 
 // Admin
 userRouter.get("/getUsers", authentication, authorization, getUsers);

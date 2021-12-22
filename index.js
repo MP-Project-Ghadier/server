@@ -19,6 +19,9 @@ app.use(userRouter);
 const statusRouter = require("./routers/routes/status");
 app.use(statusRouter);
 
+const postRouter = require("./routers/routes/post");
+app.use(postRouter);
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
