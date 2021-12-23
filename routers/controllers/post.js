@@ -68,6 +68,28 @@ const newEvent = async (req, res) => {
     res.status(400).send(error);
   }
 };
+// new event by admin
+const newCenter = async (req, res) => {
+  const { title, desc } = req.body;
+  try {
+    const newPost = new postModel({
+      title,
+      desc,
+      type: "center",
+      user: req.token.id,
+    });
+    newPost
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 // get all posts
 const getPosts = (req, res) => {
   try {
@@ -110,7 +132,20 @@ const getEvent = (req, res) => {
     res.status(400).json(error);
   }
 };
-
+//get all centers
+const getCenter = (req, res) => {
+  try {
+    postModel
+      .find({ isDel: false, type: "center" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 const getPostById = (req, res) => {
   const { id } = req.params;
   try {
@@ -153,6 +188,19 @@ const getEventById = (req, res) => {
   }
 };
 
+const getCenterById = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 //delete a post
 const deletePost = (req, res) => {
   const { id } = req.params;
@@ -244,12 +292,15 @@ module.exports = {
   newPost,
   newResearch,
   newEvent,
+  newCenter,
   getPosts,
   getResearch,
   getEvent,
+  getCenter,
   getPostById,
   getResearchById,
   getEventById,
+  getCenterById,
   deletePost,
   deletePostByAdmin,
   postComments,
