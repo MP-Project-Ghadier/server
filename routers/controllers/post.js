@@ -71,10 +71,13 @@ const newEvent = async (req, res) => {
 // get all posts
 const getPosts = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "post" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    });
+    postModel
+      .find({ isDel: false, type: "post" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -82,10 +85,13 @@ const getPosts = (req, res) => {
 //get all research
 const getResearch = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "research" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    });
+    postModel
+      .find({ isDel: false, type: "research" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -93,10 +99,13 @@ const getResearch = (req, res) => {
 //get all events
 const getEvent = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "event" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    });
+    postModel
+      .find({ isDel: false, type: "event" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -105,9 +114,12 @@ const getEvent = (req, res) => {
 const getPostById = (req, res) => {
   const { id } = req.params;
   try {
-    postModel.findById(id).then(async (result) => {
-      res.status(200).json(result);
-    });
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -116,9 +128,12 @@ const getPostById = (req, res) => {
 const getResearchById = (req, res) => {
   const { id } = req.params;
   try {
-    postModel.findById(id).then(async (result) => {
-      res.status(200).json(result);
-    });
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -127,9 +142,12 @@ const getResearchById = (req, res) => {
 const getEventById = (req, res) => {
   const { id } = req.params;
   try {
-    postModel.findById(id).then(async (result) => {
-      res.status(200).json(result);
-    });
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -204,6 +222,7 @@ const updatePost = (req, res) => {
   try {
     postModel
       .findOne({ post: id, user: req.token.id, isDel: false })
+      .populate("user", "name -_id")
       .then((result) => {
         if (result) {
           postModel
@@ -220,6 +239,7 @@ const updatePost = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 module.exports = {
   newPost,
   newResearch,
