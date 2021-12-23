@@ -1,4 +1,5 @@
 const postModel = require("./../../db/models/posts");
+const commentModel = require("./../../db/models/comments");
 
 // new post by user
 const newPost = async (req, res) => {
@@ -67,13 +68,38 @@ const newEvent = async (req, res) => {
     res.status(400).send(error);
   }
 };
+// new event by admin
+const newCenter = async (req, res) => {
+  const { title, desc } = req.body;
+  try {
+    const newPost = new postModel({
+      title,
+      desc,
+      type: "center",
+      user: req.token.id,
+    });
+    newPost
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 // get all posts
 const getPosts = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "post" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    });
+    postModel
+      .find({ isDel: false, type: "post" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -81,10 +107,13 @@ const getPosts = (req, res) => {
 //get all research
 const getResearch = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "research" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    });
+    postModel
+      .find({ isDel: false, type: "research" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -92,25 +121,168 @@ const getResearch = (req, res) => {
 //get all events
 const getEvent = (req, res) => {
   try {
-    postModel.find({ isDel: false, type: "event" }).then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
+    postModel
+      .find({ isDel: false, type: "event" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+//get all centers
+const getCenter = (req, res) => {
+  try {
+    postModel
+      .find({ isDel: false, type: "center" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        // console.log(result);
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+const getPostById = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const getResearchById = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const getEventById = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const getCenterById = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel
+      .findById(id)
+      .populate("user", "name -_id")
+      .then(async (result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+//delete a post
+const deletePost = (req, res) => {
+  const { id } = req.params;
+  try {
+    postModel.findOne({ post: id, isDel: false }).then((result) => {
+      if (result) {
+        postModel
+          .findByIdAndUpdate(id, { isDel: true }, { new: true })
+          .exec()
+          .then((result) => {
+            res.status(200).json(result);
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
+      }
     });
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
-//there is a problem with this code, 
-//but i feel sleepy so I will continue tomorrow ان شاء الله
-const getPostById = (req, res) => {
+//delete any post by admin
+const deletePostByAdmin = (req, res) => {
   const { id } = req.params;
   try {
-    console.log("result");
+    postModel
+      .findByIdAndUpdate(id, { isDel: true }, { new: true })
+      .exec()
+      .then((result) => {
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 
-    postModel.findById(id).then(async (result) => {
-      res.status(200).json(result);
-    });
+// all comments of the post
+const postComments = async (req, res) => {
+  const { id } = req.params; //post id
+  try {
+    let allPost = [];
+    postModel
+      .findOne({ _id: id }, { isDel: false })
+      .populate("user")
+      .then((result) => {
+        allPost.push(result);
+        commentModel
+          .find({ post: id })
+          .populate("user", "name")
+          .then((result2) => {
+            allPost.push(result2);
+            res.status(200).json(allPost);
+          });
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const updatePost = (req, res) => {
+  const { id } = req.params;
+  const { title, desc } = req.body;
+  try {
+    postModel
+      .findOne({ post: id, user: req.token.id, isDel: false })
+      .populate("user", "name -_id")
+      .then((result) => {
+        if (result) {
+          postModel
+            .findByIdAndUpdate(id, { title, desc, _id: id }, { new: true })
+            .then((result) => {
+              res.status(200).json(result);
+            });
+        }
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -120,8 +292,17 @@ module.exports = {
   newPost,
   newResearch,
   newEvent,
+  newCenter,
   getPosts,
   getResearch,
   getEvent,
+  getCenter,
   getPostById,
+  getResearchById,
+  getEventById,
+  getCenterById,
+  deletePost,
+  deletePostByAdmin,
+  postComments,
+  updatePost,
 };
