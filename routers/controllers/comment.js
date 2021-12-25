@@ -15,7 +15,7 @@ const newComment = (req, res) => {
       postModel
         .findByIdAndUpdate(id, { $push: { comment: result._id } })
         .then((result) => {
-          // res.status(201).json(result);
+          res.status(201).json(result);
         });
     });
     res.status(201).json(userComment);
@@ -31,25 +31,8 @@ const comments = (req, res) => {
   try {
     commentModel
       .find({ isDel: false })
-    //   .populate("users", "name -_id")
+      .populate("user post", "name title")
       .then((result) => {
-        res.status(200).json(result);
-      });
-  } catch (error) {
-    res.status(400).json(error);
-  }
-};
-
-// get comment by user Id
-const userComment = (req, res) => {
-  try {
-    commentModel
-      .find({ isDel: false, user: req.token.id })
-    //   .populate("users", "name -_id")
-    //   .populate("posts", "desc -_id")
-      .then((result) => {
-          console.log("here");
-          console.log(req.token.id);
         res.status(200).json(result);
       });
   } catch (error) {
@@ -89,11 +72,9 @@ const deleteComment = (req, res) => {
   }
 };
 
-
 module.exports = {
   newComment,
   comments,
-  userComment,
   updateComment,
   deleteComment,
 };

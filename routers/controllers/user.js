@@ -144,6 +144,9 @@ const login = (req, res) => {
           if (hashedPassword) {
             const token = jwt.sign(payload, secret, options);
             res.status(200).json({ result, token });
+            // if(status == "61c17bf397fb360ba8b98336")
+            // if status == approved { user login successfully}
+            //  else{send err msg}
           } else {
             res.status(400).send("invalid email or password");
           }
@@ -223,7 +226,7 @@ const rejectSpecialist = async (req, res) => {
     .findOneAndUpdate(
       savedEmail,
       {
-        status: "61c17bfc97fb360ba8b98338", //approved
+        status: "61c17bfc97fb360ba8b98338", //rejected
       },
       { new: true }
     )
@@ -314,7 +317,11 @@ const resetPass = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, SALT);
   try {
     userModel
-      .findByIdAndUpdate({ _id: id }, { password: hashedPassword }, { new: true })
+      .findByIdAndUpdate(
+        { _id: id },
+        { password: hashedPassword },
+        { new: true }
+      )
       .exec()
       .then((result) => {
         res.status(200).json(result);
@@ -328,75 +335,71 @@ const resetPass = async (req, res) => {
 };
 
 // // log in with google
-// const client = new OAuth2Client(
-//   "801305115124-kp5gtb7a2f1ej1e2bgi7gqrh1iio4l9t.apps.googleusercontent.com"
-// );
-// const googlelogin = async (req, res) => {
-//   const { tokenId } = req.body;
-//   try {
-//     client
-//       .verifyIdToken({
-//         idToken: tokenId,
-//         audience:
-//           "801305115124-kp5gtb7a2f1ej1e2bgi7gqrh1iio4l9t.apps.googleusercontent.com",
-//       })
-//       .then((result) => {
-//         const { email_verified, name, email, profileObj } = result.payload;
-//         console.log(email_verified);
-//         if (email_verified) {
-//           userModel.findOne({ email }).exec((err, user) => {
-//             if (err) {
-//               console.log(err);
-//               return res.status(400).json(err);
-//             } else {
-//               if (user) {
-//                 const options = {
-//                   expiresIn: "7d",
-//                 };
-//                 const token = jwt.sign(
-//                   { _id: user._id, role: user.role },
-//                   process.env.SECRET_KEY,
-//                   options
-//                 );
-//                 const result = {
-//                   _id: user._id,
-//                   userName: name,
-//                   email,
-//                   role: "61a750d07acff210a70d2b8c",
-//                 };
-//                 res.status(200).json({ result, token });
-//               } else {
-//                 let password = email + process.env.SECRET_KEY;
-//                 const newUser = new userModel({
-//                   name,
-//                   password,
-//                   email,
-//                   role: "61c17227bfafd96433645c8f", // user
-//                   status: "61c17bf397fb360ba8b98336", // aproved
-//                 });
-//                 newUser.save((err, data) => {
-//                   if (err) {
-//                     return res.status(400).send(err);
-//                   }
-//                   const token = jwt.sign(
-//                     { _id: data._id },
-//                     process.env.secert_key,
-//                     {
-//                       expiresIn: "7d",
-//                     }
-//                   );
-//                   const { _id, name, email, role, status } = newUser;
-//                   res.status(200).json({ result: data, token });
-//                 });
-//               }
-//             }
-//           });
-//         }
-//       });
-//   } catch (error) {
-//     res.status(400).send(error);
-//   }
-// };
+const client = new OAuth2Client(
+  "801305115124-kp5gtb7a2f1ej1e2bgi7gqrh1iio4l9t.apps.googleusercontent.com"
+);
+const googlelogin = async (req, res) => {
+  const { tokenId } = req.body;
+  try {
+    client
+      .verifyIdToken({
+        idToken: tokenId,
+        audience:
+          "801305115124-kp5gtb7a2f1ej1e2bgi7gqrh1iio4l9t.apps.googleusercontent.com",
+      })
+      .then((result) => {
+        const { email_verified, name, email, profileObj } = result.payload;
+        console.log(result);
+        if (email_verified) {
+          userModel.findOne({ email }).exec((err, user) => {
+            if (err) {
+              console.log("err is: ", err);
+              return res.status(400).json(err);
+            } else {
+              if (user) {
+                const options = {
+                  expiresIn: "7d",
+                };
+                const token = jwt.sign(
+                  { _id: user._id, role: "61c17227bfafd96433645c8f" },
+                  process.env.secret,
+                  options
+                );
+                const result = {
+                  _id: user._id,
+                  name,
+                  email,
+                  role: "61c17227bfafd96433645c8f",
+                };
+                res.status(200).json({ result, token });
+              } else {
+                let password = email + secret;
+                const newUser = new userModel({
+                  name,
+                  password,
+                  email,
+                  role: "61c17227bfafd96433645c8f", // user
+                  status: "61c17bf397fb360ba8b98336", // aproved
+                });
+                newUser.save((err, data) => {
+                  if (err) {
+                    return res.status(400).send(err);
+                  }
+                  const token = jwt.sign({ _id: data._id }, secret, {
+                    expiresIn: "7d",
+                  });
+                  const { _id, name, email, role, status } = newUser;
+                  res.status(200).json({ result: data, token });
+                });
+              }
+            }
+          });
+        }
+      });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 
 module.exports = {
   newUser,
@@ -412,5 +415,5 @@ module.exports = {
   verifyAccount,
   forgetPass,
   resetPass,
-  // googlelogin,
+  googlelogin,
 };
