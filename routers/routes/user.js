@@ -15,7 +15,7 @@ const {
   verifyAccount,
   forgetPass,
   resetPass,
-  // googlelogin,
+  googlelogin,
 } = require("../controllers/user");
 
 const authentication = require("./../middleware/authentication");
@@ -25,14 +25,15 @@ userRouter.post("/newUser", newUser);
 userRouter.post("/newSpecialist", newSpecialist);
 userRouter.post("/newAdmin", newAdmin);
 userRouter.post("/login", login);
-userRouter.put("/updateProfile", updateProfile);
-userRouter.put("/deleteAccount", deleteAccount);
 userRouter.put("/verifyAccount/:id", verifyAccount);
 userRouter.post("/forgetPass", forgetPass);
 userRouter.post("/resetPass/:id", resetPass);
 
 // log in with google
-// userRouter.post("/googlelogin", googlelogin);
+userRouter.post("/googlelogin", googlelogin);
+
+userRouter.put("/updateProfile", authentication, updateProfile);
+userRouter.put("/deleteAccount",authentication,  deleteAccount);
 
 // Admin
 userRouter.get("/getUsers", authentication, authorization, getUsers);
