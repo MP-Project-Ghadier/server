@@ -269,12 +269,20 @@ const updatePost = (req, res) => {
   const { title, desc } = req.body;
   try {
     postModel
-      .findOne({ post: id, user: req.token.id, isDel: false })
+      .findOne({
+        post: id,
+        user: req.token.id,
+        isDel: false,
+      })
       .populate("user", "name -_id")
       .then((result) => {
         if (result) {
           postModel
-            .findByIdAndUpdate(id, { title, desc, _id: id }, { new: true })
+            .findByIdAndUpdate(
+              id,
+              { title, desc, _id: id, isVerified: false },
+              { new: true }
+            )
             .then((result) => {
               res.status(200).json(result);
             });
@@ -288,6 +296,32 @@ const updatePost = (req, res) => {
   }
 };
 
+// approve post by admin
+const approvePost = (req, res) => {
+  const { id } = req.body;
+  try {
+    postModel
+      .findOne({
+        post: id,
+        isDel: false,
+      })
+      .populate("user", "name -_id")
+      .then((result) => {
+        if (result) {
+          postModel
+            .findByIdAndUpdate(id, { isVerified: true }, { new: true })
+            .then((result) => {
+              res.status(200).json(result);
+            });
+        }
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 module.exports = {
   newPost,
   newResearch,
@@ -305,4 +339,5 @@ module.exports = {
   deletePostByAdmin,
   postComments,
   updatePost,
+  approvePost,
 };

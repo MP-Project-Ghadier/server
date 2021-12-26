@@ -26,7 +26,7 @@ const newComment = (req, res) => {
   }
 };
 
-// get all comments ONLY admin
+
 const comments = (req, res) => {
   try {
     commentModel
@@ -59,7 +59,7 @@ const updateComment = (req, res) => {
 
 // soft delete to one comment
 const deleteComment = (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; //comment id
   try {
     commentModel
       .findByIdAndUpdate(id, { isDel: true }, { new: true })

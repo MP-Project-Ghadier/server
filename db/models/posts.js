@@ -6,6 +6,7 @@ const posts = new mongoose.Schema({
   type: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   isDel: { type: Boolean, default: false },
+  isVerified: { type: Boolean, default: false },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 });
