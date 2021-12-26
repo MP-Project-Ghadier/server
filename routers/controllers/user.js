@@ -13,100 +13,118 @@ const PASSWORD = process.env.PASSWORD;
 
 const newUser = async (req, res) => {
   //status will be approved by default
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body;
   const savedEmail = email.toLowerCase();
-  const hashedPassword = await bcrypt.hash(password, SALT);
-
-  try {
-    let mailTransporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      requireTLS: true,
-      auth: {
-        user: EMAIL,
-        pass: PASSWORD,
-      },
-    });
-    const newUser = new userModel({
-      name,
-      email: savedEmail,
-      password: hashedPassword,
-      key: Math.floor(1000 + Math.random() * 9000),
-      // role: user
-      role: "61c17227bfafd96433645c8f",
-      // status: approved
-      status: "61c17bf397fb360ba8b98336",
-    });
-    newUser.save().then((result) => {
-      let mailDetails = {
-        from: EMAIL,
-        to: result.email,
-        subject: `hello ${result.name}`,
-        text: `This is a message to confirm your identity, this is your verify code: ${result.key} back to the website and type it to confirm your email. `,
-      };
-      mailTransporter.sendMail(mailDetails, (err, data) => {
-        if (err) {
-          res.status(400).json(err);
-        } else {
-          console.log("Email sent successfully");
-          res.json(result);
-        }
+  const alreadyExit = await userModel.findOne({ email: savedEmail });
+  if (!alreadyExit) {
+    const hashedPassword = await bcrypt.hash(password, SALT);
+    try {
+      let mailTransporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        requireTLS: true,
+        auth: {
+          user: EMAIL,
+          pass: PASSWORD,
+        },
       });
-    });
-  } catch (error) {
-    res.status(400).json(error);
+
+      const newUser = new userModel({
+        name,
+        email: savedEmail,
+        password: hashedPassword,
+        avatar,
+        key: Math.floor(1000 + Math.random() * 9000),
+        // role: user
+        role: "61c17227bfafd96433645c8f",
+        // status: approved
+        status: "61c17bf397fb360ba8b98336",
+      });
+      newUser.save().then((result) => {
+        let mailDetails = {
+          from: EMAIL,
+          to: result.email,
+          subject: `hello ${result.name}`,
+          text: `This is a message to confirm your identity, this is your verify code: ${result.key} back to the website and type it to confirm your email. `,
+        };
+        mailTransporter.sendMail(mailDetails, (err, data) => {
+          if (err) {
+            res.status(400).json(err);
+          } else {
+            console.log("Email sent successfully");
+            res.json(result);
+          }
+        });
+      });
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  } else {
+    res.status(409).send("This email is already exist!");
   }
 };
 
 const newSpecialist = async (req, res) => {
   // status will be pending by default till the admin give approve
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body;
   const savedEmail = email.toLowerCase();
-  const hashedPassword = await bcrypt.hash(password, SALT);
+  const alreadyExit = await userModel.findOne({ email: savedEmail });
+  if (!alreadyExit) {
+    const hashedPassword = await bcrypt.hash(password, SALT);
 
-  const newSpecialist = new userModel({
-    name,
-    email: savedEmail,
-    password: hashedPassword,
-    // role: specialist
-    role: "61c17200bfafd96433645c8d",
-    // status: pending
-    status: "61c17bea97fb360ba8b98334",
-  });
-  newSpecialist
-    .save()
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(400).send(err);
+    const newSpecialist = new userModel({
+      name,
+      email: savedEmail,
+      avatar,
+      password: hashedPassword,
+      // role: specialist
+      role: "61c17200bfafd96433645c8d",
+      // status: pending
+      status: "61c17bea97fb360ba8b98334",
     });
+    newSpecialist
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      });
+  } else {
+    res.status(409).send("This email is already exist!");
+  }
 };
 
 const newAdmin = async (req, res) => {
   // status will be pending by default till the admin give approve
   const { name, email, password } = req.body;
   const savedEmail = email.toLowerCase();
-  const hashedPassword = await bcrypt.hash(password, SALT);
+  const alreadyExit = await userModel.findOne({ email: savedEmail });
+  if (!alreadyExit) {
+    const hashedPassword = await bcrypt.hash(password, SALT);
 
-  const newAdmin = new userModel({
-    name,
-    email: savedEmail,
-    password: hashedPassword,
-    // role: admin
-    role: "61c17200bfafd96433645c8d",
-    // status: pending
-    status: "61c17bea97fb360ba8b98334",
-  });
-  newAdmin
-    .save()
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(400).send(err);
+    const newAdmin = new userModel({
+      name,
+      email: savedEmail,
+      password: hashedPassword,
+      avatar,
+      // role: admin
+      role: "61c17200bfafd96433645c8d",
+      // status: pending
+      status: "61c17bea97fb360ba8b98334",
     });
+    newAdmin
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      });
+  } else {
+    res.status(409).send("This email is already exist!");
+  }
 };
 
 const getUsers = async (req, res) => {
@@ -163,7 +181,7 @@ const login = (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body;
   const savedEmail = email.toLowerCase();
   const hashedPassword = await bcrypt.hash(password, SALT);
 
@@ -174,6 +192,7 @@ const updateProfile = async (req, res) => {
         name,
         email,
         password: hashedPassword,
+        avatar,
       },
       { new: true }
     )
@@ -349,7 +368,7 @@ const googlelogin = async (req, res) => {
       })
       .then((result) => {
         const { email_verified, name, email, profileObj } = result.payload;
-        console.log(result);
+        // console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
@@ -362,7 +381,7 @@ const googlelogin = async (req, res) => {
                 };
                 const token = jwt.sign(
                   { _id: user._id, role: "61c17227bfafd96433645c8f" },
-                  process.env.secret,
+                  secret,
                   options
                 );
                 const result = {
@@ -378,6 +397,7 @@ const googlelogin = async (req, res) => {
                   name,
                   password,
                   email,
+                  avatar,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
                 });
@@ -388,7 +408,7 @@ const googlelogin = async (req, res) => {
                   const token = jwt.sign({ _id: data._id }, secret, {
                     expiresIn: "7d",
                   });
-                  const { _id, name, email, role, status } = newUser;
+                  // const { _id, name, email, role, status } = newUser;
                   res.status(200).json({ result: data, token });
                 });
               }

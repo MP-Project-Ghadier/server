@@ -21,6 +21,7 @@ const {
   deletePostByAdmin,
   postComments,
   updatePost,
+  approvePost,
 } = require("../controllers/post");
 
 postRouter.post("/newPost", authentication, newPost); //by any user
@@ -42,7 +43,14 @@ postRouter.put(
   authorization,
   deletePostByAdmin
 ); //only by admin or specialist
-postRouter.get("/postComments/:id", authentication, postComments);
-postRouter.put("/updatePost/:id", authentication, updatePost);
+
+postRouter.get(
+  "/postComments/:id",
+  authentication,
+  authorization,
+  postComments
+);
+postRouter.put("/updatePost/:id", authentication, authorization, updatePost);
+postRouter.put("/approvePost", authentication, authorization, approvePost);
 
 module.exports = postRouter;
