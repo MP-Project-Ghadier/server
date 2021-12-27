@@ -151,9 +151,7 @@ const login = (req, res) => {
 
   userModel
     .findOne({ email: savedEmail })
-    .populate("role", "role")
     .then(async (result) => {
-      console.log(result.status);
       if (result) {
         if (result.email == savedEmail) {
           const hashedPassword = await bcrypt.compare(
@@ -167,19 +165,20 @@ const login = (req, res) => {
           const options = {
             expiresIn: "600m",
           };
-          if (result.verified) {
-            if (result.status == "61c17bf397fb360ba8b98336") {
-              if (hashedPassword) {
-                const token = jwt.sign(payload, secret, options);
-                res.status(200).json({ result, token });
-              } else {
-                res.status(400).send("invalid email or password");
-              }
-            } else {
-              res.status(400).send("Your account is not approved yet.");
-            }
+          if (hashedPassword) {
+            const token = jwt.sign(payload, secret, options);
+            res.status(200).json({ result, token });
+            // check if user verified & specialist approved
+            // if(status == "61c17bf397fb360ba8b98336")
+            // if status == approved { user login successfully}
+            //  else{send err msg}
+            // if (!result.verified) {
+            //   return res.status(403).send({
+            //     message: "Verify your Account.",
+            //   });
+            // }
           } else {
-            res.status(400).send("Verify your Account!");
+            res.status(400).send("invalid email or password");
           }
         } else {
           res.status(400).send("invalid email or password");
@@ -402,7 +401,7 @@ const googlelogin = async (req, res) => {
       })
       .then((result) => {
         const { email_verified, name, email, profileObj } = result.payload;
-        console.log(result);
+        // console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
@@ -431,6 +430,7 @@ const googlelogin = async (req, res) => {
                   name,
                   password,
                   email,
+                  avatar,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
                 });
