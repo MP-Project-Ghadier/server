@@ -12,7 +12,7 @@ const {
   approveSpecialist,
   rejectSpecialist,
   deleteUser,
-  verifyAccount,
+  verifyEmail,
   forgetPass,
   resetPass,
   googlelogin,
@@ -25,7 +25,7 @@ userRouter.post("/newUser", newUser);
 userRouter.post("/newSpecialist", newSpecialist);
 userRouter.post("/newAdmin", newAdmin);
 userRouter.post("/login", login);
-userRouter.put("/verifyAccount/:id", verifyAccount);
+userRouter.get("/verifyEmail/:token", verifyEmail);
 userRouter.post("/forgetPass", forgetPass);
 userRouter.post("/resetPass/:id", resetPass);
 
@@ -33,7 +33,7 @@ userRouter.post("/resetPass/:id", resetPass);
 userRouter.post("/googlelogin", googlelogin);
 
 userRouter.put("/updateProfile", authentication, updateProfile);
-userRouter.put("/deleteAccount",authentication,  deleteAccount);
+userRouter.put("/deleteAccount", authentication, deleteAccount);
 
 // Admin
 userRouter.get("/getUsers", authentication, authorization, getUsers);
