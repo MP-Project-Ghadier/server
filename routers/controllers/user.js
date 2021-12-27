@@ -18,6 +18,7 @@ const newUser = async (req, res) => {
   const alreadyExit = await userModel.findOne({ email: savedEmail });
   if (!alreadyExit) {
     const hashedPassword = await bcrypt.hash(password, SALT);
+
     try {
       let mailTransporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -30,24 +31,29 @@ const newUser = async (req, res) => {
         },
       });
 
-      const newUser = new userModel({
+      const newUser = await new userModel({
         name,
         email: savedEmail,
         password: hashedPassword,
         avatar,
-        key: Math.floor(1000 + Math.random() * 9000),
         // role: user
         role: "61c17227bfafd96433645c8f",
         // status: approved
         status: "61c17bf397fb360ba8b98336",
       });
-      newUser.save().then((result) => {
+      newUser.save().then(async (result) => {
+        // console.log(result);
+        const verificationToken = await newUser.generateVerificationToken();
+        // console.log(verificationToken);
+        const url = `http://localhost:3000/verifyEmail/${verificationToken}`;
+
         let mailDetails = {
           from: EMAIL,
           to: result.email,
-          subject: `hello ${result.name}`,
-          text: `This is a message to confirm your identity, this is your verify code: ${result.key} back to the website and type it to confirm your email. `,
+          subject: `hello ${result.name}, Verify your Account`,
+          html: `This is a message to confirm your identity, Click <a href='${url}'>here</a> to complete your registration. `,
         };
+
         mailTransporter.sendMail(mailDetails, (err, data) => {
           if (err) {
             res.status(400).json(err);
@@ -145,7 +151,9 @@ const login = (req, res) => {
 
   userModel
     .findOne({ email: savedEmail })
+    .populate("role", "role")
     .then(async (result) => {
+      console.log(result.status);
       if (result) {
         if (result.email == savedEmail) {
           const hashedPassword = await bcrypt.compare(
@@ -159,14 +167,19 @@ const login = (req, res) => {
           const options = {
             expiresIn: "600m",
           };
-          if (hashedPassword) {
-            const token = jwt.sign(payload, secret, options);
-            res.status(200).json({ result, token });
-            // if(status == "61c17bf397fb360ba8b98336")
-            // if status == approved { user login successfully}
-            //  else{send err msg}
+          if (result.verified) {
+            if (result.status == "61c17bf397fb360ba8b98336") {
+              if (hashedPassword) {
+                const token = jwt.sign(payload, secret, options);
+                res.status(200).json({ result, token });
+              } else {
+                res.status(400).send("invalid email or password");
+              }
+            } else {
+              res.status(400).send("Your account is not approved yet.");
+            }
           } else {
-            res.status(400).send("invalid email or password");
+            res.status(400).send("Verify your Account!");
           }
         } else {
           res.status(400).send("invalid email or password");
@@ -271,19 +284,40 @@ const deleteUser = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
-const verifyAccount = async (req, res) => {
-  const { id } = req.params;
-
-  userModel
-    .findByIdAndUpdate({ _id: id }, { confirmed: true }, { new: true })
-    .exec()
-    .then((result) => {
-      // console.log(result);
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      res.status(404).send("error message:", err.message);
+const verifyEmail = async (req, res) => {
+  // console.log("here");
+  const { token } = req.params;
+  // Check we have an id
+  if (!token) {
+    return res.status(422).send({
+      message: "Missing Token",
     });
+  }
+  // Step 1 -  Verify the token from the URL
+  let payload = null;
+  try {
+    payload = jwt.verify(token, process.env.USER_VERIFICATION_TOKEN_SECRET);
+    console.log("token", token);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+  try {
+    // Step 2 - Find user with matching ID
+    const user = await userModel.findOne({ _id: payload.ID }).exec();
+    if (!user) {
+      return res.status(404).send({
+        message: "User does not  exists",
+      });
+    }
+    // Step 3 - Update user verification status to true
+    user.verified = true;
+    await user.save();
+    return res.status(200).send({
+      message: "Account Verified",
+    });
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 };
 
 const forgetPass = async (req, res) => {
@@ -368,7 +402,7 @@ const googlelogin = async (req, res) => {
       })
       .then((result) => {
         const { email_verified, name, email, profileObj } = result.payload;
-        // console.log(result);
+        console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
@@ -397,7 +431,6 @@ const googlelogin = async (req, res) => {
                   name,
                   password,
                   email,
-                  avatar,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
                 });
@@ -432,7 +465,7 @@ module.exports = {
   approveSpecialist,
   rejectSpecialist,
   deleteUser,
-  verifyAccount,
+  verifyEmail,
   forgetPass,
   resetPass,
   googlelogin,

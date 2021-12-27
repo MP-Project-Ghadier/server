@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const users = new mongoose.Schema({
   name: { type: String, required: true },
@@ -6,8 +8,11 @@ const users = new mongoose.Schema({
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   isDel: { type: Boolean, default: false },
-  key: { type: Number },
-  confirmed: { type: Boolean, default: false },
+  verified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   resetCode: { type: Number },
   avatar: {
     type: String,
@@ -29,5 +34,15 @@ const users = new mongoose.Schema({
     },
   ],
 });
+
+users.methods.generateVerificationToken = function () {
+  const user = this;
+  const verificationToken = jwt.sign(
+    { ID: user._id },
+    process.env.USER_VERIFICATION_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+  return verificationToken;
+};
 
 module.exports = mongoose.model("Users", users);
