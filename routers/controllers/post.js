@@ -108,10 +108,10 @@ const getPosts = (req, res) => {
 const getResearch = (req, res) => {
   try {
     postModel
-      .find({ isDel: false, type: "research" })
+      .find({ isDel: false, type: "research", isVerified: true })
       .populate("user", "name -_id")
       .then((result) => {
-        // console.log(result);
+        console.log(result);
         res.status(200).json(result);
       });
   } catch (error) {
@@ -151,7 +151,7 @@ const getPostById = (req, res) => {
   try {
     postModel
       .findById(id)
-      .populate("user", "name -_id")
+      .populate("user comments", "name desc -_id")
       .then(async (result) => {
         res.status(200).json(result);
       });
@@ -249,7 +249,7 @@ const postComments = async (req, res) => {
       .then((result) => {
         allPost.push(result);
         commentModel
-          .find({ post: id })
+          .find({ post: id, isDel: false  })
           .populate("user", "name")
           .then((result2) => {
             allPost.push(result2);
@@ -267,6 +267,7 @@ const postComments = async (req, res) => {
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { title, desc } = req.body;
+  console.log(title, desc);
   try {
     postModel
       .findOne({

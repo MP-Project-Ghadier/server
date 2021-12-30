@@ -6,26 +6,28 @@ const newComment = (req, res) => {
   const { id } = req.params; //post id
   const { desc } = req.body;
   try {
-    const userComment = new commentModel({
+    const newComment = new commentModel({
       desc,
       user: req.token.id,
       post: id,
     });
-    userComment.save().then((result) => {
+    newComment.save().then((result) => {
       postModel
-        .findByIdAndUpdate(id, { $push: { comment: result._id } })
+        .findByIdAndUpdate(id, { $push: { comments: result._id } })
         .then((result) => {
           res.status(201).json(result);
+        })
+        .catch((err) => {
+          res.status(400).json(err);
         });
     });
-    res.status(201).json(userComment);
+    res.status(201).json(result);
   } catch {
     (err) => {
       res.status(400).json(err);
     };
   }
 };
-
 
 const comments = (req, res) => {
   try {
