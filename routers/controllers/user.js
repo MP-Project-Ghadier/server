@@ -10,6 +10,7 @@ const SALT = Number(process.env.SALT);
 const secret = process.env.SECRET_KEY;
 const EMAIL = process.env.EMAIL;
 const PASSWORD = process.env.PASSWORD;
+const BASE_URL = process.env.BASE_URL;
 
 const newUser = async (req, res) => {
   //status will be approved by default
@@ -45,7 +46,7 @@ const newUser = async (req, res) => {
         // console.log(result);
         const verificationToken = await newUser.generateVerificationToken();
         // console.log(verificationToken);
-        const url = `http://localhost:3000/verifyEmail/${verificationToken}`;
+        const url = `${BASE_URL}/verifyEmail/${verificationToken}`;
 
         let mailDetails = {
           from: EMAIL,
@@ -78,25 +79,52 @@ const newSpecialist = async (req, res) => {
   const alreadyExit = await userModel.findOne({ email: savedEmail });
   if (!alreadyExit) {
     const hashedPassword = await bcrypt.hash(password, SALT);
-
-    const newSpecialist = new userModel({
-      name,
-      email: savedEmail,
-      avatar,
-      password: hashedPassword,
-      // role: specialist
-      role: "61c17200bfafd96433645c8d",
-      // status: pending
-      status: "61c17bea97fb360ba8b98334",
-    });
-    newSpecialist
-      .save()
-      .then((result) => {
-        res.status(201).json(result);
-      })
-      .catch((err) => {
-        res.status(400).send(err);
+    try {
+      let mailTransporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        requireTLS: true,
+        auth: {
+          user: EMAIL,
+          pass: PASSWORD,
+        },
       });
+      const newSpecialist = new userModel({
+        name,
+        email: savedEmail,
+        avatar,
+        password: hashedPassword,
+        // role: specialist
+        role: "61c17200bfafd96433645c8d",
+        // status: pending
+        status: "61c17bea97fb360ba8b98334",
+      });
+      newSpecialist.save().then(async (result) => {
+        // console.log(result);
+        const verificationToken = await newUser.generateVerificationToken();
+        // console.log(verificationToken);
+        const url = `${BASE_URL}/verifyEmail/${verificationToken}`;
+
+        let mailDetails = {
+          from: EMAIL,
+          to: result.email,
+          subject: `hello ${result.name}, Verify your Account`,
+          html: `This is a message to confirm your identity, Click <a href='${url}'>here</a> to complete your registration. `,
+        };
+
+        mailTransporter.sendMail(mailDetails, (err, data) => {
+          if (err) {
+            res.status(400).json(err);
+          } else {
+            console.log("Email sent successfully");
+            res.json(result);
+          }
+        });
+      });
+    } catch (error) {
+      res.status(400).json(error);
+    }
   } else {
     res.status(409).send("This email is already exist!");
   }
@@ -151,7 +179,9 @@ const login = (req, res) => {
 
   userModel
     .findOne({ email: savedEmail })
+    .populate("role", "role")
     .then(async (result) => {
+      console.log(result.status);
       if (result) {
         if (result.email == savedEmail) {
           const hashedPassword = await bcrypt.compare(
@@ -165,20 +195,19 @@ const login = (req, res) => {
           const options = {
             expiresIn: "600m",
           };
-          if (hashedPassword) {
-            const token = jwt.sign(payload, secret, options);
-            res.status(200).json({ result, token });
-            // check if user verified & specialist approved
-            // if(status == "61c17bf397fb360ba8b98336")
-            // if status == approved { user login successfully}
-            //  else{send err msg}
-            // if (!result.verified) {
-            //   return res.status(403).send({
-            //     message: "Verify your Account.",
-            //   });
-            // }
+          if (result.verified) {
+            if (result.status == "61c17bf397fb360ba8b98336") {
+              if (hashedPassword) {
+                const token = jwt.sign(payload, secret, options);
+                res.status(200).json({ result, token });
+              } else {
+                res.status(400).send("invalid email or password");
+              }
+            } else {
+              res.status(400).send("Your account is not approved yet.");
+            }
           } else {
-            res.status(400).send("invalid email or password");
+            res.status(400).send("Verify your Account!");
           }
         } else {
           res.status(400).send("invalid email or password");
@@ -333,19 +362,18 @@ const forgetPass = async (req, res) => {
       },
     });
 
-    let code = Math.floor(1000 + Math.random() * 9000);
+    let code = Math.floor(100000 + Math.random() * 9000);
 
     userModel
-      .findOneAndUpdate(email, { resetCode: code })
+      .findOneAndUpdate({ email: email }, { resetCode: code })
       .exec()
       .then((result) => {
         let mailDetails = {
           from: EMAIL,
           to: result.email,
           subject: `hello ${result.name}`,
-          text: `This is a message to confirm your identity, enter this code: ${code}`,
+          text: `This is a message to confirm your identity, enter this code: ${code}. Enter this link to change your password ${BASE_URL}/resetPass/${result._id}`,
         };
-
         mailTransporter.sendMail(mailDetails, (err, data) => {
           if (err) {
             res.json(err);
@@ -353,6 +381,7 @@ const forgetPass = async (req, res) => {
             res.json(result);
           }
         });
+        // console.log("email", email);
         res.status(200).json("sent successfuly");
       })
       .catch((err) => {
@@ -365,7 +394,7 @@ const forgetPass = async (req, res) => {
 
 const resetPass = async (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
+  const { password, code } = req.body;
   const hashedPassword = await bcrypt.hash(password, SALT);
   try {
     userModel
@@ -376,6 +405,7 @@ const resetPass = async (req, res) => {
       )
       .exec()
       .then((result) => {
+        console.log(result);
         res.status(200).json(result);
       })
       .catch((err) => {
@@ -401,7 +431,7 @@ const googlelogin = async (req, res) => {
       })
       .then((result) => {
         const { email_verified, name, email, profileObj } = result.payload;
-        // console.log(result);
+        console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
@@ -430,7 +460,6 @@ const googlelogin = async (req, res) => {
                   name,
                   password,
                   email,
-                  avatar,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
                 });

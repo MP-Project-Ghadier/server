@@ -44,12 +44,7 @@ postRouter.put(
   deletePostByAdmin
 ); //only by admin or specialist
 
-postRouter.get(
-  "/postComments/:id",
-  authentication,
-  authorization,
-  postComments
-);
+postRouter.get("/postComments/:id", authentication, postComments);
 postRouter.put("/updatePost/:id", authentication, authorization, updatePost);
 postRouter.put("/approvePost", authentication, authorization, approvePost);
 
