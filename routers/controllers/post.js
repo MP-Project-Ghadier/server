@@ -48,11 +48,12 @@ const newResearch = async (req, res) => {
 };
 // new event by admin
 const newEvent = async (req, res) => {
-  const { title, desc } = req.body;
+  const { title, desc, img } = req.body;
   try {
     const newPost = new postModel({
       title,
       desc,
+      img,
       type: "event",
       user: req.token.id,
     });
@@ -70,11 +71,12 @@ const newEvent = async (req, res) => {
 };
 // new event by admin
 const newCenter = async (req, res) => {
-  const { title, desc } = req.body;
+  const { title, desc, img } = req.body;
   try {
     const newPost = new postModel({
       title,
       desc,
+      img,
       type: "center",
       user: req.token.id,
     });
@@ -97,7 +99,7 @@ const getPosts = (req, res) => {
       .find({ isDel: false, type: "post" })
       .populate("user", "name -_id")
       .then((result) => {
-        // console.log(result);
+        console.log(result);
         res.status(200).json(result);
       });
   } catch (error) {
@@ -111,7 +113,7 @@ const getResearch = (req, res) => {
       .find({ isDel: false, type: "research", isVerified: true })
       .populate("user", "name -_id")
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
       });
   } catch (error) {
@@ -249,7 +251,7 @@ const postComments = async (req, res) => {
       .then((result) => {
         allPost.push(result);
         commentModel
-          .find({ post: id, isDel: false  })
+          .find({ post: id, isDel: false })
           .populate("user", "name")
           .then((result2) => {
             allPost.push(result2);
