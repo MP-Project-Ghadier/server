@@ -6,6 +6,7 @@ const {
   newSpecialist,
   newAdmin,
   getUsers,
+  getUser,
   login,
   updateProfile,
   deleteAccount,
@@ -34,6 +35,7 @@ userRouter.post("/googlelogin", googlelogin);
 
 userRouter.put("/updateProfile", authentication, updateProfile);
 userRouter.put("/deleteAccount", authentication, deleteAccount);
+userRouter.get("/profile/:id", authentication, getUser);
 
 // Admin
 userRouter.get("/getUsers", authentication, authorization, getUsers);

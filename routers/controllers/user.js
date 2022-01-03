@@ -173,6 +173,19 @@ const getUsers = async (req, res) => {
     });
 };
 
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  userModel
+    .findOne({ _id: id }, { isDel: false })
+    .exec()
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
+
 const login = (req, res) => {
   const { email, password } = req.body;
   const savedEmail = email.toLowerCase();
@@ -199,7 +212,7 @@ const login = (req, res) => {
             if (result.status == "61c17bf397fb360ba8b98336") {
               if (hashedPassword) {
                 const token = jwt.sign(payload, secret, options);
-                res.status(200).json({ result, token });
+                res.status(200).json({ result, role: result.role.role, token });
               } else {
                 res.status(400).send("invalid email or password");
               }
@@ -222,16 +235,22 @@ const login = (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { name, email, password, avatar } = req.body;
-  const savedEmail = email.toLowerCase();
+  const {
+    _id,
+    name,
+    // email,
+    password,
+    avatar,
+  } = req.body;
+  // const savedEmail = email.toLowerCase();
   const hashedPassword = await bcrypt.hash(password, SALT);
 
   userModel
-    .findOneAndUpdate(
-      savedEmail,
+    .findByIdAndUpdate(
+      _id,
       {
         name,
-        email,
+        // email,
         password: hashedPassword,
         avatar,
       },
@@ -430,7 +449,7 @@ const googlelogin = async (req, res) => {
           "801305115124-kp5gtb7a2f1ej1e2bgi7gqrh1iio4l9t.apps.googleusercontent.com",
       })
       .then((result) => {
-        const { email_verified, name, email, profileObj } = result.payload;
+        const { email_verified, name, email, picture } = result.payload;
         console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
@@ -447,6 +466,7 @@ const googlelogin = async (req, res) => {
                   secret,
                   options
                 );
+                console.log(user._id);
                 const result = {
                   _id: user._id,
                   name,
@@ -462,6 +482,7 @@ const googlelogin = async (req, res) => {
                   email,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
+                  avatar: picture
                 });
                 newUser.save((err, data) => {
                   if (err) {
@@ -470,7 +491,6 @@ const googlelogin = async (req, res) => {
                   const token = jwt.sign({ _id: data._id }, secret, {
                     expiresIn: "7d",
                   });
-                  // const { _id, name, email, role, status } = newUser;
                   res.status(200).json({ result: data, token });
                 });
               }
@@ -488,6 +508,7 @@ module.exports = {
   newSpecialist,
   newAdmin,
   getUsers,
+  getUser,
   login,
   updateProfile,
   deleteAccount,

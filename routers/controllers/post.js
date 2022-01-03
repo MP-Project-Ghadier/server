@@ -17,9 +17,11 @@ const newPost = async (req, res) => {
         res.status(201).json(result);
       })
       .catch((err) => {
+        console.log(err);
         res.status(400).json(err);
       });
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 };
