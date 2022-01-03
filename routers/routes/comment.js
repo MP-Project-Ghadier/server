@@ -15,5 +15,12 @@ commentRouter.post("/newComment/:id", authentication, newComment);
 commentRouter.get("/comments", authentication, comments);
 commentRouter.put("/updateComment/:id", authentication, updateComment);
 commentRouter.put("/deleteComment/:id", authentication, deleteComment);
+// by admin
+commentRouter.put(
+  "/deleteComment/:id",
+  authentication,
+  authorization,
+  deleteComment
+);
 
 module.exports = commentRouter;

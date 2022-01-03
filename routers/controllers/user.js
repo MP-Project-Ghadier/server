@@ -102,7 +102,8 @@ const newSpecialist = async (req, res) => {
       });
       newSpecialist.save().then(async (result) => {
         // console.log(result);
-        const verificationToken = await newUser.generateVerificationToken();
+        const verificationToken =
+          await newSpecialist.generateVerificationToken();
         // console.log(verificationToken);
         const url = `${BASE_URL}/verifyEmail/${verificationToken}`;
 
@@ -285,14 +286,17 @@ const approveSpecialist = async (req, res) => {
 
   userModel
     .findOneAndUpdate(
-      savedEmail,
+      { email: savedEmail },
       {
         status: "61c17bf397fb360ba8b98336", //approved
       },
       { new: true }
     )
     .exec()
-    .then((result) => res.status(200).json(result))
+    .then((result) => {
+      console.log(result);
+      res.status(200).json(result);
+    })
     .catch((err) => console.log(err));
 };
 
@@ -303,7 +307,7 @@ const rejectSpecialist = async (req, res) => {
 
   userModel
     .findOneAndUpdate(
-      savedEmail,
+      { email: savedEmail },
       {
         status: "61c17bfc97fb360ba8b98338", //rejected
       },
@@ -320,7 +324,7 @@ const deleteUser = async (req, res) => {
 
   userModel
     .findOneAndUpdate(
-      savedEmail,
+      { email: savedEmail },
       {
         isDel: true,
       },
@@ -419,7 +423,7 @@ const resetPass = async (req, res) => {
     userModel
       .findByIdAndUpdate(
         { _id: id },
-        { password: hashedPassword },
+        { password: hashedPassword, code: code },
         { new: true }
       )
       .exec()
@@ -450,7 +454,7 @@ const googlelogin = async (req, res) => {
       })
       .then((result) => {
         const { email_verified, name, email, picture } = result.payload;
-        console.log(result);
+        // console.log(result);
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
@@ -482,7 +486,7 @@ const googlelogin = async (req, res) => {
                   email,
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
-                  avatar: picture
+                  avatar: picture,
                 });
                 newUser.save((err, data) => {
                   if (err) {
