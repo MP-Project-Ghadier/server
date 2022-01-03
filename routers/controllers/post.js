@@ -10,6 +10,7 @@ const newPost = async (req, res) => {
       desc,
       type: "post",
       user: req.token.id,
+      isVerified: true,
     });
     newPost
       .save()
@@ -48,6 +49,7 @@ const newResearch = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 // new event by admin
 const newEvent = async (req, res) => {
   const { title, desc, img } = req.body;
@@ -56,6 +58,7 @@ const newEvent = async (req, res) => {
       title,
       desc,
       img,
+      isVerified: true,
       type: "event",
       user: req.token.id,
     });
@@ -71,6 +74,7 @@ const newEvent = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 // new event by admin
 const newCenter = async (req, res) => {
   const { title, desc, img } = req.body;
@@ -79,6 +83,7 @@ const newCenter = async (req, res) => {
       title,
       desc,
       img,
+      isVerified: true,
       type: "center",
       user: req.token.id,
     });
@@ -94,11 +99,12 @@ const newCenter = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 // get all posts
 const getPosts = (req, res) => {
   try {
     postModel
-      .find({ isDel: false, type: "post" })
+      .find({ isDel: false, isVerified: true, type: "post" })
       .populate("user", "name -_id")
       .then((result) => {
         console.log(result);
@@ -108,6 +114,7 @@ const getPosts = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 //get all research
 const getResearch = (req, res) => {
   try {
@@ -122,6 +129,7 @@ const getResearch = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 //get all events
 const getEvent = (req, res) => {
   try {
@@ -136,6 +144,7 @@ const getEvent = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 //get all centers
 const getCenter = (req, res) => {
   try {
@@ -150,6 +159,7 @@ const getCenter = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 const getPostById = (req, res) => {
   const { id } = req.params;
   try {
@@ -205,6 +215,7 @@ const getCenterById = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 //delete a post
 const deletePost = (req, res) => {
   const { id } = req.params;
@@ -271,7 +282,7 @@ const postComments = async (req, res) => {
 const updatePost = (req, res) => {
   const { id } = req.params;
   const { title, desc } = req.body;
-  console.log(title, desc);
+  // console.log(title, desc);
   try {
     postModel
       .findOne({
@@ -327,6 +338,7 @@ const approvePost = (req, res) => {
     res.status(400).json(error);
   }
 };
+
 module.exports = {
   newPost,
   newResearch,
