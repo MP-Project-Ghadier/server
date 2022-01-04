@@ -339,6 +339,21 @@ const approvePost = (req, res) => {
   }
 };
 
+// all user posts
+const getPostsByUserId = async(req, res) => {
+  const { user } = req.body;
+  try {
+    postModel
+      .find({user})
+      .then((result) => {
+        console.log(result);
+        res.status(200).json(result);
+      }).catch((err)=> console.log("err:", err))
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 module.exports = {
   newPost,
   newResearch,
@@ -357,4 +372,5 @@ module.exports = {
   postComments,
   updatePost,
   approvePost,
+  getPostsByUserId,
 };
