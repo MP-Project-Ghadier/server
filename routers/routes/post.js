@@ -22,6 +22,7 @@ const {
   postComments,
   updatePost,
   approvePost,
+  getPostsByUserId,
 } = require("../controllers/post");
 
 postRouter.post("/newPost", authentication, newPost); //by any user
@@ -34,6 +35,7 @@ postRouter.get("/getResearchById/:id", getResearchById);
 postRouter.get("/getEventById/:id", getEventById);
 postRouter.get("/getCenterById/:id", getCenterById);
 postRouter.put("/deletePost/:id", authentication, deletePost);
+postRouter.get("/getPostsByUserId", authentication, getPostsByUserId);
 
 postRouter.put(
   "/deletePostByAdmin/:id",
@@ -41,9 +43,9 @@ postRouter.put(
   authorization,
   deletePostByAdmin
 );
-postRouter.post("/newResearch", authentication, authorization, newResearch); 
-postRouter.post("/newEvent", authentication, authorization, newEvent); 
-postRouter.post("/newCenter", authentication, authorization, newCenter); 
+postRouter.post("/newResearch", authentication, authorization, newResearch);
+postRouter.post("/newEvent", authentication, authorization, newEvent);
+postRouter.post("/newCenter", authentication, authorization, newCenter);
 postRouter.get("/postComments/:id", authentication, postComments);
 postRouter.put("/updatePost/:id", authentication, authorization, updatePost);
 postRouter.put("/approvePost", authentication, authorization, approvePost);
