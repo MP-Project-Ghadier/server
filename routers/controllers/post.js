@@ -29,11 +29,12 @@ const newPost = async (req, res) => {
 
 // new research by admin or specialist
 const newResearch = async (req, res) => {
-  const { title, desc } = req.body;
+  const { title, desc, location } = req.body;
   try {
     const newPost = new postModel({
       title,
       desc,
+      location,
       type: "research",
       user: req.token.id,
     });
@@ -356,6 +357,20 @@ const getPostsByUserId = async (req, res) => {
   }
 };
 
+// all research needed approve
+const reseachNeedApprove = async (req, res) => {
+  try {
+    postModel
+      .find({ isDel: false, isVerified: false, type: "research" })
+      .populate("user", "name -_id")
+      .then((result) => {
+        console.log(result);
+        res.status(200).json(result);
+      });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 module.exports = {
   newPost,
   newResearch,
@@ -375,4 +390,5 @@ module.exports = {
   updatePost,
   approvePost,
   getPostsByUserId,
+  reseachNeedApprove,
 };

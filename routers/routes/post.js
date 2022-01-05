@@ -23,6 +23,7 @@ const {
   updatePost,
   approvePost,
   getPostsByUserId,
+  reseachNeedApprove,
 } = require("../controllers/post");
 
 postRouter.post("/newPost", authentication, newPost); //by any user
@@ -50,5 +51,11 @@ postRouter.get("/postComments/:id", authentication, postComments);
 postRouter.put("/updatePost/:id", authentication, authorization, updatePost);
 postRouter.put("/approvePost", authentication, authorization, approvePost);
 postRouter.put("/deletePost/:id", authentication, authorization, deletePost);
+postRouter.get(
+  "/reseachNeedApprove",
+  authentication,
+  authorization,
+  reseachNeedApprove
+);
 
 module.exports = postRouter;
