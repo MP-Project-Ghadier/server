@@ -5,6 +5,7 @@ const posts = new mongoose.Schema({
   desc: { type: String, required: true },
   type: { type: String, required: true },
   img: { type: String },
+  location: { type: String },
   createdAt: { type: Date, default: Date.now },
   isDel: { type: Boolean, default: false },
   isVerified: { type: Boolean, default: false },

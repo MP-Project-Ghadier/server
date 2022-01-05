@@ -236,23 +236,12 @@ const login = (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const {
-    _id,
-    name,
-    // email,
-    password,
-    avatar,
-  } = req.body;
-  // const savedEmail = email.toLowerCase();
-  const hashedPassword = await bcrypt.hash(password, SALT);
-
+  const { _id, name, avatar } = req.body;
   userModel
     .findByIdAndUpdate(
       _id,
       {
         name,
-        // email,
-        password: hashedPassword,
         avatar,
       },
       { new: true }

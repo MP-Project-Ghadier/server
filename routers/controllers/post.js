@@ -83,6 +83,7 @@ const newCenter = async (req, res) => {
       title,
       desc,
       img,
+      location,
       isVerified: true,
       type: "center",
       user: req.token.id,
@@ -281,7 +282,7 @@ const postComments = async (req, res) => {
 
 const updatePost = (req, res) => {
   const { id } = req.params;
-  const { title, desc } = req.body;
+  const { title, desc, location } = req.body;
   // console.log(title, desc);
   try {
     postModel
@@ -296,7 +297,7 @@ const updatePost = (req, res) => {
           postModel
             .findByIdAndUpdate(
               id,
-              { title, desc, _id: id, isVerified: false },
+              { title, desc, location, _id: id, isVerified: false },
               { new: true }
             )
             .then((result) => {
@@ -340,15 +341,16 @@ const approvePost = (req, res) => {
 };
 
 // all user posts
-const getPostsByUserId = async(req, res) => {
+const getPostsByUserId = async (req, res) => {
   const { user } = req.body;
   try {
     postModel
-      .find({user})
+      .find({ user })
       .then((result) => {
         console.log(result);
         res.status(200).json(result);
-      }).catch((err)=> console.log("err:", err))
+      })
+      .catch((err) => console.log("err:", err));
   } catch (error) {
     res.status(400).json(error);
   }
