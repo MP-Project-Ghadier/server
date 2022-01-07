@@ -78,7 +78,7 @@ const newEvent = async (req, res) => {
 
 // new event by admin
 const newCenter = async (req, res) => {
-  const { title, desc, img } = req.body;
+  const { title, desc, img, location } = req.body;
   try {
     const newPost = new postModel({
       title,
@@ -92,6 +92,7 @@ const newCenter = async (req, res) => {
     newPost
       .save()
       .then((result) => {
+        console.log(result);
         res.status(201).json(result);
       })
       .catch((err) => {
@@ -137,7 +138,7 @@ const getEvent = (req, res) => {
   try {
     postModel
       .find({ isDel: false, type: "event" })
-      .populate("user", "name -_id")
+      .populate("user", " -_id")
       .then((result) => {
         // console.log(result);
         res.status(200).json(result);
@@ -154,23 +155,25 @@ const getCenter = (req, res) => {
       .find({ isDel: false, type: "center" })
       .populate("user", "name -_id")
       .then((result) => {
-        // console.log(result);
+        console.log(result);
         res.status(200).json(result);
-      });
+      })
+      .catch((err) => console.log(err));
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
-const getPostById = (req, res) => {
+const getPostById = async (req, res) => {
   const { id } = req.params;
   try {
-    postModel
+    await postModel
       .findById(id)
       .populate("user comments", "name desc -_id")
       .then(async (result) => {
         res.status(200).json(result);
-      });
+      })
+      .catch((err) => console.log(err));
   } catch (error) {
     res.status(400).json(error);
   }
@@ -195,7 +198,7 @@ const getEventById = (req, res) => {
   try {
     postModel
       .findById(id)
-      .populate("user", "name -_id")
+      .populate("user", " -_id")
       .then(async (result) => {
         res.status(200).json(result);
       });
