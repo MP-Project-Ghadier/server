@@ -33,7 +33,7 @@ const comments = (req, res) => {
   try {
     commentModel
       .find({ isDel: false })
-      .populate("user post", "name title")
+      .populate("user post")
       .then((result) => {
         res.status(200).json(result);
       });

@@ -465,6 +465,7 @@ const googlelogin = async (req, res) => {
                   name,
                   email,
                   role: "61c17227bfafd96433645c8f",
+                  avatar: user.avatar,
                 };
                 res.status(200).json({ result, token });
               } else {
@@ -476,15 +477,22 @@ const googlelogin = async (req, res) => {
                   role: "61c17227bfafd96433645c8f", // user
                   status: "61c17bf397fb360ba8b98336", // aproved
                   avatar: picture,
+                  verified: true,
                 });
                 newUser.save((err, data) => {
                   if (err) {
-                    return res.status(400).send(err);
+                    return res.status(400).send("here", err);
                   }
-                  const token = jwt.sign({ _id: data._id }, secret, {
-                    expiresIn: "7d",
-                  });
+
+                  const token = jwt.sign(
+                    { id: data._id, role: "61c17227bfafd96433645c8f" },
+                    secret,
+                    {
+                      expiresIn: "7d",
+                    }
+                  );
                   res.status(200).json({ result: data, token });
+                  // console.log("data", data);
                 });
               }
             }
