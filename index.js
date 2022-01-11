@@ -25,6 +25,7 @@ app.use(postRouter);
 const commentRouter = require("./routers/routes/comment");
 app.use(commentRouter);
 
+app.get("*", (req, res) => {res.sendFile(``)});
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {

@@ -108,7 +108,7 @@ const getPosts = (req, res) => {
   try {
     postModel
       .find({ isDel: false, isVerified: true, type: "post" })
-      .populate("user", "name -_id")
+      .populate("user")
       .then((result) => {
         console.log(result);
         res.status(200).json(result);
@@ -169,7 +169,7 @@ const getPostById = async (req, res) => {
   try {
     await postModel
       .findById(id)
-      .populate("user comments", "name desc -_id")
+      .populate("user comments")
       .then(async (result) => {
         res.status(200).json(result);
       })
@@ -270,7 +270,7 @@ const postComments = async (req, res) => {
         allPost.push(result);
         commentModel
           .find({ post: id, isDel: false })
-          .populate("user", "name")
+          .populate("user")
           .then((result2) => {
             allPost.push(result2);
             res.status(200).json(allPost);
