@@ -18,22 +18,23 @@ const newPost = async (req, res) => {
         res.status(201).json(result);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         res.status(400).json(err);
       });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(400).send(error);
   }
 };
 
 // new research by admin or specialist
 const newResearch = async (req, res) => {
-  const { title, desc } = req.body;
+  const { title, desc, location } = req.body;
   try {
     const newPost = new postModel({
       title,
       desc,
+      location,
       type: "research",
       user: req.token.id,
     });
@@ -91,7 +92,7 @@ const newCenter = async (req, res) => {
     newPost
       .save()
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(201).json(result);
       })
       .catch((err) => {
@@ -109,7 +110,7 @@ const getPosts = (req, res) => {
       .find({ isDel: false, isVerified: true, type: "post" })
       .populate("user")
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
       });
   } catch (error) {
@@ -154,10 +155,12 @@ const getCenter = (req, res) => {
       .find({ isDel: false, type: "center" })
       .populate("user", "name -_id")
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => 
+      console.log(err)
+      );
   } catch (error) {
     res.status(400).json(error);
   }
@@ -285,7 +288,7 @@ const postComments = async (req, res) => {
 
 const updatePost = (req, res) => {
   const { id } = req.params;
-  const { title, desc, location } = req.body;
+  const { title, desc, location, img } = req.body;
   // console.log(title, desc);
   try {
     postModel
@@ -300,7 +303,7 @@ const updatePost = (req, res) => {
           postModel
             .findByIdAndUpdate(
               id,
-              { title, desc, location, _id: id, isVerified: false },
+              { title, desc, location, img, _id: id, isVerified: false },
               { new: true }
             )
             .then((result) => {
@@ -350,7 +353,7 @@ const getPostsByUserId = async (req, res) => {
     postModel
       .find({ user })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
       })
       .catch((err) => console.log("err:", err));
