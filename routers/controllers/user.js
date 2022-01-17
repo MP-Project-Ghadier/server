@@ -59,7 +59,7 @@ const newUser = async (req, res) => {
           if (err) {
             res.status(400).json(err);
           } else {
-            console.log("Email sent successfully");
+            // console.log("Email sent successfully");
             res.json(result);
           }
         });
@@ -118,7 +118,7 @@ const newSpecialist = async (req, res) => {
           if (err) {
             res.status(400).json(err);
           } else {
-            console.log("Email sent successfully");
+            // console.log("Email sent successfully");
             res.json(result);
           }
         });
@@ -195,7 +195,7 @@ const login = (req, res) => {
     .findOne({ email: savedEmail })
     .populate("role", "role")
     .then(async (result) => {
-      console.log(result.status);
+      // console.log(result.status);
       if (result) {
         if (result.email == savedEmail) {
           const hashedPassword = await bcrypt.compare(
@@ -283,7 +283,7 @@ const approveSpecialist = async (req, res) => {
     )
     .exec()
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       res.status(200).json(result);
     })
     .catch((err) => console.log(err));
@@ -337,7 +337,7 @@ const verifyEmail = async (req, res) => {
   let payload = null;
   try {
     payload = jwt.verify(token, process.env.USER_VERIFICATION_TOKEN_SECRET);
-    console.log("token", token);
+    // console.log("token", token);
   } catch (err) {
     return res.status(500).send(err);
   }
@@ -417,7 +417,7 @@ const resetPass = async (req, res) => {
       )
       .exec()
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
       })
       .catch((err) => {
@@ -447,7 +447,7 @@ const googlelogin = async (req, res) => {
         if (email_verified) {
           userModel.findOne({ email }).exec((err, user) => {
             if (err) {
-              console.log("err is: ", err);
+              // console.log("err is: ", err);
               return res.status(400).json(err);
             } else {
               if (user) {
@@ -459,7 +459,7 @@ const googlelogin = async (req, res) => {
                   secret,
                   options
                 );
-                console.log(user._id);
+                // console.log(user._id);
                 const result = {
                   _id: user._id,
                   name,
