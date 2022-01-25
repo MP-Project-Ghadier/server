@@ -16,7 +16,7 @@ const newUser = async (req, res) => {
   //status will be approved by default
   const { name, email, password, avatar } = req.body;
   const savedEmail = email.toLowerCase();
-  const alreadyExit = await userModel.findOne({ email: savedEmail });
+  const alreadyExit = await userModel.findOne({ email: savedEmail,  verified: true  });
   if (!alreadyExit) {
     const hashedPassword = await bcrypt.hash(password, SALT);
 
@@ -374,10 +374,12 @@ const forgetPass = async (req, res) => {
       },
     });
 
-    let code = Math.floor(100000 + Math.random() * 9000);
+    // let code = Math.floor(100000 + Math.random() * 9000);
 
     userModel
-      .findOneAndUpdate({ email: email }, { resetCode: code })
+      .findOneAndUpdate({ email: email }
+        // , { resetCode: code }
+        )
       .exec()
       .then((result) => {
         let mailDetails = {
@@ -393,7 +395,6 @@ const forgetPass = async (req, res) => {
             res.json(result);
           }
         });
-        // console.log("email", email);
         res.status(200).json("sent successfuly");
       })
       .catch((err) => {
